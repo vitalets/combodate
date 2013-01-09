@@ -2,7 +2,8 @@
 * Combodate - 1.0.0
 * Combobox datetime picker.
 * Turns text input into several comboboxes to pick day, month, year, hour, minute and second.
-* Uses momentjs as datetime library. 
+* Uses momentjs as datetime library http://momentjs.com.
+* For i18n include corresponding file from https://github.com/timrwood/moment/tree/master/lang 
 *
 * Author: Vitaliy Potapov
 * Project page: http://github.com/vitalets/combodate

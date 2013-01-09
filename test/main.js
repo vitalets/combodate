@@ -249,3 +249,15 @@ test("firstItem", function () {
   equal(e.siblings('.combodate').find('.day').find('option').eq(0).text(), '1', 'firstItem none ok');
   
 });
+
+test("destroy", function () {
+  var f = 'DD-MM-YYYY',
+      d = moment([1984, 1, 28]),
+      e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+  
+  ok(e.siblings('.combodate').length, 'combodate exists');
+  e.combodate('destroy');
+  
+  ok(!e.siblings('.combodate').length, 'combodate removed');
+  ok(e.is(':visible'), 'element visible');
+});

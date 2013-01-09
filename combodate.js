@@ -322,8 +322,12 @@
             } else if(this.options.firstItem === 'empty') {
                 values.push(['', '']);
             }
-        }
-                    
+        },
+        
+        destroy: function() {
+            this.$widget.remove();
+            this.$element.removeData('combodate').show();
+        }        
     };
 
     $.fn.combodate = function ( option ) {

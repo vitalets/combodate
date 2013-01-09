@@ -24,16 +24,20 @@
     Combodate.prototype = {
         constructor: Combodate, 
         init: function () {
-            this.$widget = $('<span class="combodate"></span>');
-            this.$element.after(this.$widget).hide();
+            this.map = {
+                //key   regexp    moment.method
+                day:    ['D',    'date'], 
+                month:  ['M',    'month'], 
+                year:   ['Y',    'year'], 
+                hour:   ['[Hh]', 'hours'],
+                minute: ['m',    'minutes'], 
+                second: ['s',    'seconds'],
+                ampm:   ['[Aa]', ''] 
+            };
+            
+            this.$widget = $('<span class="combodate"></span>').html(this.getTemplate());
                       
-            this.initDay();
-            this.initMonth();
-            this.initYear();
-            this.initHour();
-            this.initMinute();
-            this.initSecond();
-            this.initAmpm();
+            this.initCombos();
             
             //update original input on change 
             this.$widget.on('change', $.proxy(function(){
@@ -48,157 +52,187 @@
             //set initial value
             this.setValue(this.$element.val() || this.options.value);
         },
-
+        
         /*
-        Init day
-        */
-        initDay: function() {
-            if(this.options.format.indexOf('D') !== -1) {
-                var values = [];
-                
-                this.firstItem(values, 'd');
-                
-                for(var i=1; i<=31; i++) {
-                    values.push([i, i]);
-                }        
-                
-                this.$day = $('<select class="day"></select>').html(this.getItems(values));
-                this.$widget.append(this.$day);          
-            }
+         Replace tokens in viewformat with <select> elements 
+        */         
+        getTemplate: function() {
+            var tpl = this.options.viewformat;
+
+            //first pass
+            $.each(this.map, function(k, v) {
+                var v = v[0], 
+                    r = new RegExp(v+'+'),
+                    token = v.length > 1 ? v.substring(1, 2) : v;
+                    
+                tpl = tpl.replace(r, '{'+token+'}');
+            });
+
+            //replace spaces with &nbsp;
+            tpl = tpl.replace(/ /g, '&nbsp;');
+
+            //second pass
+            $.each(this.map, function(k, v) {
+                var v = v[0],
+                    token = v.length > 1 ? v.substring(1, 2) : v;
+                    
+                tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"></select>');
+            });   
+
+            return tpl;
         },
         
         /*
-        Init month
+         Initialize combos that presents in viewformat 
+        */        
+        initCombos: function() {
+            var that = this;
+            $.each(this.map, function(k, v) {
+               var $c = that.$widget.find('.'+k), f, items;
+               if($c.length) {
+                   that['$'+k] = $c; //set properties like this.$day, this.$month etc.
+                   f = 'fill' + k.charAt(0).toUpperCase() + k.slice(1); //define method name to fill items, e.g `fillDays`
+                   items = that[f](); 
+                   that['$'+k].html(that.renderItems(items));
+               }
+            }); 
+        },
+        
+        /*
+         Initialize items of combos. Handles `firstItem` option 
         */
-        initMonth: function() {
-            if(this.options.format.indexOf('M') !== -1) {
-                var values = [], name, header,
-                    longNames = this.options.format.indexOf('MMMM') !== -1,
-                    shortNames = this.options.format.indexOf('MMM') !== -1;
-                
-                this.firstItem(values, 'M');
-                
-                for(var i=0; i<=11; i++) {
-                    if(longNames) {
-                        name = moment.months[i];
-                    } else if(shortNames) {
-                        name = moment.monthsShort[i];
-                    } else {
-                        name = i+1;
-                    }
-                    
-                    values.push([i, name]);
-                } 
-
-                this.$month = $('<select class="month"></select>').html(this.getItems(values));          
-                if(this.$day) {
-                   this.$widget.append(this.options.dateSep);
-                }
-                this.$widget.append(this.$month);
+        initItems: function(key) {
+            var values = [];
+            if(this.options.firstItem === 'name') {
+                var header = typeof moment.relativeTime[key] === 'function' ? moment.relativeTime[key](1, true, key, false) : moment.relativeTime[key];
+                //take last entry (see momentjs lang files structure) 
+                header = header.split(' ').reverse()[0];                
+                values.push(['', header]);
+            } else if(this.options.firstItem === 'empty') {
+                values.push(['', '']);
             }
+            return values;
+        },        
+        
+        /*
+        render items to string of <option> tags
+        */
+        renderItems: function(items) {
+            var str = [];
+            for(var i=0; i<items.length; i++) {
+                str.push('<option value="'+items[i][0]+'">'+items[i][1]+'</option>');                
+            }
+            return str.join("\n");
+        },        
+
+        /*
+        fill day
+        */
+        fillDay: function() {
+            var items = this.initItems('d'), name, i,
+                twoDigit = this.options.viewformat.indexOf('DD') !== -1;
+                
+            for(i=1; i<=31; i++) {
+                name = twoDigit ? this.leadZero(i) : i;
+                items.push([i, name]);
+            }
+            return items;        
+        },
+        
+        /*
+        fill month
+        */
+        fillMonth: function() {
+            var items = this.initItems('M'), name, i, 
+                longNames = this.options.viewformat.indexOf('MMMM') !== -1,
+                shortNames = this.options.viewformat.indexOf('MMM') !== -1,
+                twoDigit = this.options.viewformat.indexOf('MM') !== -1;
+                
+            for(i=0; i<=11; i++) {
+                if(longNames) {
+                    name = moment.months[i];
+                } else if(shortNames) {
+                    name = moment.monthsShort[i];
+                } else if(twoDigit) {
+                    name = this.leadZero(i+1);
+                } else {
+                    name = i+1;
+                }
+                items.push([i, name]);
+            } 
+            return items;
         },  
         
         /*
-        Init year
+        fill year
         */
-        initYear: function() {
-            if(this.options.format.indexOf('Y') !== -1) {
-                var values = [];
-                
-                this.firstItem(values, 'y');
-                
-                for(var i=this.options.maxYear; i>=this.options.minYear; i--) {
-                    values.push([i, i]);
-                }    
-                              
-                this.$year = $('<select class="year"></select>').html(this.getItems(values));          
-                if(this.$month) {
-                   this.$widget.append(this.options.dateSep);
-                }
-                this.$widget.append(this.$year);                    
-            }
+        fillYear: function() {
+            var items = this.initItems('y'), name, i, 
+                longNames = this.options.viewformat.indexOf('YYYY') !== -1;
+
+            for(i=this.options.maxYear; i>=this.options.minYear; i--) {
+                name = longNames ? i : (i+'').substring(2);
+                items.push([i, name]);
+            }    
+            return items;              
         },    
         
         /*
-        Init hour
+        fill hour
         */
-        initHour: function() {
-            var h12 = this.options.format.indexOf('h') !== -1,
-                h24 = this.options.format.indexOf('H') !== -1,
-                leadZero, max, values;
-                
-            if(h12 || h24) {
-                values = [];
-                
-                this.firstItem(values, 'h');
-                
-                leadZero = this.options.format.toLowerCase().indexOf('hh') !== -1;
+        fillHour: function() {
+            var items = this.initItems('h'), name, i,
+                h12 = this.options.viewformat.indexOf('h') !== -1,
+                h24 = this.options.viewformat.indexOf('H') !== -1,
+                twoDigit = this.options.viewformat.toLowerCase().indexOf('hh') !== -1,
                 max = h12 ? 12 : 23;
                 
-                for(var i=0; i<=max; i++) {
-                    values.push([i, leadZero && i <= 9 ? '0'+i : i]);
-                }    
-                              
-                this.$hour = $('<select class="hour"></select>').html(this.getItems(values));          
-                this.$widget.append(this.$hour);                    
-                if(this.$year) {
-                   this.$hour.css('margin-left', 20);
-                }                     
-            }
+            for(i=0; i<=max; i++) {
+                name = twoDigit ? this.leadZero(i) : i;
+                items.push([i, name]);
+            } 
+            return items;                 
         },    
         
         /*
-        Init minute
+        fill minute
         */
-        initMinute: function() {
-            if(this.options.format.indexOf('m') !== -1) {
-                var values = [];
-                
-                this.firstItem(values, 'm');
-                
-                for(var i=0; i<=59; i+= this.options.minuteStep) {
-                    values.push([i, i <= 9 ? '0'+i : i]);
-                }    
-                              
-                this.$minute = $('<select class="minute"></select>').html(this.getItems(values));
-                this.$widget.append(this.options.timeSep, this.$minute);                              
-            }
+        fillMinute: function() {
+            var items = this.initItems('m'), name, i,
+                twoDigit = this.options.viewformat.indexOf('mm') !== -1;
+
+            for(i=0; i<=59; i+= this.options.minuteStep) {
+                name = twoDigit ? this.leadZero(i) : i;
+                items.push([i, name]);
+            }    
+            return items;              
         },  
         
         /*
-        Init second
+        fill second
         */
-        initSecond: function() {
-            if(this.options.format.indexOf('s') !== -1) {
-                var values = [];
-                
-                this.firstItem(values, 's');
-                
-                for(var i=0; i<=59; i+= this.options.secondStep) {
-                    values.push([i, i <= 9 ? '0'+i : i]);
-                }    
-                              
-                this.$second = $('<select class="second"></select>').html(this.getItems(values));
-                this.$widget.append(this.options.timeSep, this.$second);                              
-            }
+        fillSecond: function() {
+            var items = this.initItems('s'), name, i,
+                twoDigit = this.options.viewformat.indexOf('ss') !== -1;
+
+            for(i=0; i<=59; i+= this.options.secondStep) {
+                name = twoDigit ? this.leadZero(i) : i;
+                items.push([i, name]);
+            }    
+            return items;              
         },  
         
         /*
-        Init ampm
+        fill ampm
         */
-        initAmpm: function() {
-            var ampmL = this.options.format.indexOf('a') !== -1,
-                ampmU = this.options.format.indexOf('A') !== -1;            
-            
-            if(ampmL || ampmU) {
-                var values = [
-                  ['am', ampmL ? 'am' : 'AM'],
-                  ['pm', ampmL ? 'pm' : 'PM']
+        fillAmpm: function() {
+            var ampmL = this.options.viewformat.indexOf('a') !== -1,
+                ampmU = this.options.viewformat.indexOf('A') !== -1,            
+                items = [
+                    ['am', ampmL ? 'am' : 'AM'],
+                    ['pm', ampmL ? 'pm' : 'PM']
                 ];
-                              
-                this.$ampm = $('<select class="ampm"></select>').html(this.getItems(values)).css('margin-left', 10);
-                this.$widget.append(this.$ampm);                              
-            }
+            return items;                              
         },                                       
         
         /*
@@ -207,57 +241,39 @@
          If format = `null` - Moment object returned.
         */
         getValue: function(format) {
-            var dt, 
-                notSelected = false,
-                values = {
-                    //some combobox may be not visible and we use dummy values to get correct date
-                    d: this.$day ? parseInt(this.$day.val(), 10) : 1,
-                    m: this.$month ? parseInt(this.$month.val(), 10) : 0,
-                    y: this.$year ? parseInt(this.$year.val(), 10) : 0,
-                    h: this.$hour ? parseInt(this.$hour.val(), 10) : 0,
-                    mm: this.$minute ? parseInt(this.$minute.val(), 10) : 0,
-                    s: this.$second ? parseInt(this.$second.val(), 10) : 0
-                };
-            
-            //if something not selected, return empty string
-            $.each(values, function(k, v) {
-                if(isNaN(v)) {
+            var dt, values = {}, 
+                that = this,
+                notSelected = false;
+                
+            //getting selected values    
+            $.each(this.map, function(k, v) {
+                var def = k === 'day' ? 1 : 0;
+                  
+                values[k] = that['$'+k] ? parseInt(that['$'+k].val(), 10) : def; 
+                
+                if(isNaN(values[k])) {
                    notSelected = true;
                    return false; 
                 }
             });
+            
+            //if at least one visible combo not selected - return empty string
             if(notSelected) {
                return '';
             }
             
             //convert hours if 12h format
             if(this.$ampm) {
-               values.h = this.$ampm.val() === 'am' ? values.h : values.h+12;
-               if(values.h === 24) {
-                   values.h = 0;
+               values.hour = this.$ampm.val() === 'am' ? values.hour : values.hour+12;
+               if(values.hour === 24) {
+                   values.hour = 0;
                }  
             }    
             
-            dt = moment([values.y, values.m, values.d, values.h, values.mm, values.s]);
+            dt = moment([values.year, values.month, values.day, values.hour, values.minute, values.second]);
             
             //highlight invalid date
-            if(!dt.isValid()) {
-               if(this.options.errorClass) {
-                   this.$widget.addClass(this.options.errorClass);
-               } else {
-                   //store original border color
-                   if(!this.borderColor) {
-                      this.borderColor = this.$widget.find('select').css('border-color'); 
-                   }
-                   this.$widget.find('select').css('border-color', 'red');
-               } 
-            } else {
-               if(this.options.errorClass) {
-                   this.$widget.removeClass(this.options.errorClass);
-               } else {
-                   this.$widget.find('select').css('border-color', this.borderColor);
-               }  
-            }
+            this.highlight(dt);
                               
             format = format === undefined ? this.options.format : format;
             if(format === null) {
@@ -274,30 +290,29 @@
             
             var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
                 that = this,
-                values;
+                values = {};
             
             if(dt.isValid()) {
-               values = {
-                 '$day':    dt.date(),   
-                 '$month':  dt.month(),   
-                 '$year':   dt.year(),   
-                 '$hour':   dt.hours(),   
-                 '$minute': dt.minutes(),   
-                 '$second': dt.seconds()   
-               };
+                 //read values from date object
+                 $.each(this.map, function(k, v) {
+                     if(k === 'ampm') {
+                         return; 
+                     }
+                     values[k] = dt[v[1]]();
+                 });
                
                if(this.$ampm) {
-                   if(values.$hour > 12) {
-                       values.$hour -= 12;
-                       values.$ampm = 'pm';
+                   if(values.hour > 12) {
+                       values.hour -= 12;
+                       values.ampm = 'pm';
                    } else {
-                       values.$ampm = 'am';                  
+                       values.ampm = 'am';                  
                    } 
                }
                
                $.each(values, function(k, v) {
-                   if(that[k]) {
-                       that[k].val(v);                       
+                   if(that['$'+k]) {
+                       that['$'+k].val(v);                       
                    }
                });
                
@@ -305,29 +320,39 @@
             }
         },
         
-        getItems: function(values) {
-            var items = [];
-            for(var i=0; i<values.length; i++) {
-                items.push('<option value="'+values[i][0]+'">'+values[i][1]+'</option>');                
+        /*
+         highlight combos if date is invalid
+        */
+        highlight: function(date) {
+            if(!dt.isValid()) {
+                if(this.options.errorClass) {
+                    this.$widget.addClass(this.options.errorClass);
+                } else {
+                    //store original border color
+                    if(!this.borderColor) {
+                        this.borderColor = this.$widget.find('select').css('border-color'); 
+                    }
+                    this.$widget.find('select').css('border-color', 'red');
+                } 
+            } else {
+                if(this.options.errorClass) {
+                    this.$widget.removeClass(this.options.errorClass);
+                } else {
+                    this.$widget.find('select').css('border-color', this.borderColor);
+                }  
             }
-            return items.join("\n");
         },
         
-        firstItem: function(values, key) {
-            if(this.options.firstItem === 'name') {
-                var header = typeof moment.relativeTime[key] === 'function' ? moment.relativeTime[key](1, true, key, false) : moment.relativeTime[key];
-                //take last entry 
-                header = header.split(' ').reverse()[0];                
-                values.push(['', header]);
-            } else if(this.options.firstItem === 'empty') {
-                values.push(['', '']);
-            }
+        leadZero: function(v) {
+            return v <= 9 ? '0' + v : v; 
         },
         
         destroy: function() {
             this.$widget.remove();
             this.$element.removeData('combodate').show();
-        }        
+        }
+        
+        //todo: clear method        
     };
 
     $.fn.combodate = function ( option ) {
@@ -348,13 +373,17 @@
     };  
     
     $.fn.combodate.defaults = {
-        format: 'DD-MM-YYYY HH:mm',
-        value: null, //initial value, can be `new Date()` 
+         //in this format value stored in original input
+        format: 'DD-MM-YYYY HH:mm',      
+        //in this format values in dropdowns are displayed
+        viewformat: 'D / MMM / YYYY   H : mm',
+        //initial value, can be `new Date()`    
+        value: null,                       
         minYear: 1970,
         maxYear: 2015,
         minuteStep: 5,
         secondStep: 1,
-        firstItem: 'name', //'name', 'empty', 'none'
+        firstItem: 'empty', //'name', 'empty', 'none'
         errorClass: null,
         dateSep: ' / ',
         timeSep: ' : '

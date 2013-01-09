@@ -204,7 +204,7 @@
         /*
          Returns current date value. 
          If format not specified - `options.format` used.
-         If format = `null` - Date object returned.
+         If format = `null` - Moment object returned.
         */
         getValue: function(format) {
             var dt, 
@@ -261,7 +261,7 @@
                               
             format = format === undefined ? this.options.format : format;
             if(format === null) {
-               return dt.isValid() ? dt.toDate() : null; 
+               return dt.isValid() ? dt : null; 
             } else {
                return dt.isValid() ? dt.format(format) : ''; 
             }           
@@ -273,25 +273,36 @@
             }
             
             var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
-                that = this;
+                that = this,
+                values;
             
             if(dt.isValid()) {
-               $.each({
+               values = {
                  '$day':    dt.date(),   
                  '$month':  dt.month(),   
                  '$year':   dt.year(),   
                  '$hour':   dt.hours(),   
                  '$minute': dt.minutes(),   
-                 '$second': dt.seconds(),   
-                 '$ampm':   dt.hours()   
-               }, function(k, v) {
+                 '$second': dt.seconds()   
+               };
+               
+               if(this.$ampm) {
+                   if(values.$hour > 12) {
+                       values.$hour -= 12;
+                       values.$ampm = 'pm';
+                   } else {
+                       values.$ampm = 'am';                  
+                   } 
+               }
+               
+               $.each(values, function(k, v) {
                    if(that[k]) {
                        that[k].val(v);                       
                    }
                });
+               
+               this.$element.val(dt.format(this.options.format));
             }
-            
-            this.$element.val(dt.format(this.options.format));            
         },
         
         getItems: function(values) {
@@ -334,7 +345,7 @@
     
     $.fn.combodate.defaults = {
         format: 'DD-MM-YYYY HH:mm',
-        value: new Date(), //initial value 
+        value: null, //initial value, can be `new Date()` 
         minYear: 1970,
         maxYear: 2015,
         minuteStep: 5,

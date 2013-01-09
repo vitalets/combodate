@@ -62,7 +62,7 @@
                     values.push([i, i]);
                 }        
                 
-                this.$day = $('<select></select>').html(this.getItems(values));
+                this.$day = $('<select class="day"></select>').html(this.getItems(values));
                 this.$widget.append(this.$day);          
             }
         },
@@ -90,7 +90,7 @@
                     values.push([i, name]);
                 } 
 
-                this.$month = $('<select></select>').html(this.getItems(values));          
+                this.$month = $('<select class="month"></select>').html(this.getItems(values));          
                 if(this.$day) {
                    this.$widget.append(this.options.dateSep);
                 }
@@ -111,7 +111,7 @@
                     values.push([i, i]);
                 }    
                               
-                this.$year = $('<select></select>').html(this.getItems(values));          
+                this.$year = $('<select class="year"></select>').html(this.getItems(values));          
                 if(this.$month) {
                    this.$widget.append(this.options.dateSep);
                 }
@@ -139,7 +139,7 @@
                     values.push([i, leadZero && i <= 9 ? '0'+i : i]);
                 }    
                               
-                this.$hour = $('<select></select>').html(this.getItems(values));          
+                this.$hour = $('<select class="hour"></select>').html(this.getItems(values));          
                 this.$widget.append(this.$hour);                    
                 if(this.$year) {
                    this.$hour.css('margin-left', 20);
@@ -160,7 +160,7 @@
                     values.push([i, i <= 9 ? '0'+i : i]);
                 }    
                               
-                this.$minute = $('<select></select>').html(this.getItems(values));
+                this.$minute = $('<select class="minute"></select>').html(this.getItems(values));
                 this.$widget.append(this.options.timeSep, this.$minute);                              
             }
         },  
@@ -178,7 +178,7 @@
                     values.push([i, i <= 9 ? '0'+i : i]);
                 }    
                               
-                this.$second = $('<select></select>').html(this.getItems(values));
+                this.$second = $('<select class="second"></select>').html(this.getItems(values));
                 this.$widget.append(this.options.timeSep, this.$second);                              
             }
         },  
@@ -196,7 +196,7 @@
                   ['pm', ampmL ? 'pm' : 'PM']
                 ];
                               
-                this.$ampm = $('<select></select>').html(this.getItems(values)).css('margin-left', 10);
+                this.$ampm = $('<select class="ampm"></select>').html(this.getItems(values)).css('margin-left', 10);
                 this.$widget.append(this.$ampm);                              
             }
         },                                       

@@ -54,10 +54,10 @@
         },
         
         /*
-         Replace tokens in viewformat with <select> elements 
+         Replace tokens in template with <select> elements 
         */         
         getTemplate: function() {
-            var tpl = this.options.viewformat;
+            var tpl = this.options.template;
 
             //first pass
             $.each(this.map, function(k, v) {
@@ -83,7 +83,7 @@
         },
         
         /*
-         Initialize combos that presents in viewformat 
+         Initialize combos that presents in template 
         */        
         initCombos: function() {
             var that = this;
@@ -130,7 +130,7 @@
         */
         fillDay: function() {
             var items = this.initItems('d'), name, i,
-                twoDigit = this.options.viewformat.indexOf('DD') !== -1;
+                twoDigit = this.options.template.indexOf('DD') !== -1;
                 
             for(i=1; i<=31; i++) {
                 name = twoDigit ? this.leadZero(i) : i;
@@ -144,9 +144,9 @@
         */
         fillMonth: function() {
             var items = this.initItems('M'), name, i, 
-                longNames = this.options.viewformat.indexOf('MMMM') !== -1,
-                shortNames = this.options.viewformat.indexOf('MMM') !== -1,
-                twoDigit = this.options.viewformat.indexOf('MM') !== -1;
+                longNames = this.options.template.indexOf('MMMM') !== -1,
+                shortNames = this.options.template.indexOf('MMM') !== -1,
+                twoDigit = this.options.template.indexOf('MM') !== -1;
                 
             for(i=0; i<=11; i++) {
                 if(longNames) {
@@ -168,7 +168,7 @@
         */
         fillYear: function() {
             var items = this.initItems('y'), name, i, 
-                longNames = this.options.viewformat.indexOf('YYYY') !== -1;
+                longNames = this.options.template.indexOf('YYYY') !== -1;
 
             for(i=this.options.maxYear; i>=this.options.minYear; i--) {
                 name = longNames ? i : (i+'').substring(2);
@@ -182,9 +182,9 @@
         */
         fillHour: function() {
             var items = this.initItems('h'), name, i,
-                h12 = this.options.viewformat.indexOf('h') !== -1,
-                h24 = this.options.viewformat.indexOf('H') !== -1,
-                twoDigit = this.options.viewformat.toLowerCase().indexOf('hh') !== -1,
+                h12 = this.options.template.indexOf('h') !== -1,
+                h24 = this.options.template.indexOf('H') !== -1,
+                twoDigit = this.options.template.toLowerCase().indexOf('hh') !== -1,
                 max = h12 ? 12 : 23;
                 
             for(i=0; i<=max; i++) {
@@ -199,7 +199,7 @@
         */
         fillMinute: function() {
             var items = this.initItems('m'), name, i,
-                twoDigit = this.options.viewformat.indexOf('mm') !== -1;
+                twoDigit = this.options.template.indexOf('mm') !== -1;
 
             for(i=0; i<=59; i+= this.options.minuteStep) {
                 name = twoDigit ? this.leadZero(i) : i;
@@ -213,7 +213,7 @@
         */
         fillSecond: function() {
             var items = this.initItems('s'), name, i,
-                twoDigit = this.options.viewformat.indexOf('ss') !== -1;
+                twoDigit = this.options.template.indexOf('ss') !== -1;
 
             for(i=0; i<=59; i+= this.options.secondStep) {
                 name = twoDigit ? this.leadZero(i) : i;
@@ -226,8 +226,8 @@
         fill ampm
         */
         fillAmpm: function() {
-            var ampmL = this.options.viewformat.indexOf('a') !== -1,
-                ampmU = this.options.viewformat.indexOf('A') !== -1,            
+            var ampmL = this.options.template.indexOf('a') !== -1,
+                ampmU = this.options.template.indexOf('A') !== -1,            
                 items = [
                     ['am', ampmL ? 'am' : 'AM'],
                     ['pm', ampmL ? 'pm' : 'PM']
@@ -384,7 +384,7 @@
          //in this format value stored in original input
         format: 'DD-MM-YYYY HH:mm',      
         //in this format items in dropdowns are displayed
-        viewformat: 'D / MMM / YYYY   H : mm',
+        template: 'D / MMM / YYYY   H : mm',
         //initial value, can be `new Date()`    
         value: null,                       
         minYear: 1970,

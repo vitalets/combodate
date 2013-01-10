@@ -56,13 +56,13 @@ test("should store instance in data object", function () {
 });
 
 test("options via data-* attribute", function () {
-  var e = $('<input data-format="D-M-YY" data-viewformat="DD - MM - YYYY">').combodate();
+  var e = $('<input data-format="D-M-YY" data-template="DD - MM - YYYY">').combodate();
   equal(e.data('combodate').options.format, 'D-M-YY', 'format taken from data-* attribute');
-  equal(e.data('combodate').options.viewformat, 'DD - MM - YYYY', 'viewformat taken from data-* attribute');
+  equal(e.data('combodate').options.template, 'DD - MM - YYYY', 'template taken from data-* attribute');
 });
 
 test("should hide original input and show selects (24h)", function () {
-  var e = $('<input data-viewformat="'+vf24+'">').appendTo('#qunit-fixture').combodate({
+  var e = $('<input data-template="'+vf24+'">').appendTo('#qunit-fixture').combodate({
       firstItem: 'name'
   });
    
@@ -76,7 +76,7 @@ test("should hide original input and show selects (24h)", function () {
 });    
 
 test("should hide original input and show selects (12h)", function () {
-  var e = $('<input data-viewformat="'+vf12+'">').appendTo('#qunit-fixture').combodate({
+  var e = $('<input data-template="'+vf12+'">').appendTo('#qunit-fixture').combodate({
        firstItem: 'none'
   }),
   cnt = $.extend({}, counts, {hour: 13});
@@ -92,7 +92,7 @@ test("should hide original input and show selects (12h)", function () {
 test("should load value from input and save new values on change (24h)", function () {
   var f = f24, vf = vf24,
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
      
   //check values in combos
   $.each(map, function(k, v) {
@@ -118,7 +118,7 @@ test("should load value from input and save new values on change (24h)", functio
 test("should load value from input and save new values on change (12h)", function () {
   var f = f12, vf = vf12,
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
      
   //check values in combos
   $.each(map, function(k, v) {
@@ -162,7 +162,7 @@ test("should load value from input and save new values on change (12h)", functio
 
 test("empty value in input (select nothing)", function () {
   var f = f24, vf = vf24, 
-      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-template="'+vf+'">').appendTo('#qunit-fixture').combodate();
    
   $.each(map, function(k, v) {
       if(k === 'ampm') return;
@@ -174,7 +174,7 @@ test("empty value in input (select nothing)", function () {
 
 test("empty value in input (use value from config)", function () {
   var  f = f24, vf = vf24, d = moment(),
-       e = $('<input data-format="'+f+'" data-viewformat="'+vf+'">').appendTo('#qunit-fixture').combodate({
+       e = $('<input data-format="'+f+'" data-template="'+vf+'">').appendTo('#qunit-fixture').combodate({
            value: d.toDate(),
            minuteStep: 1
        });
@@ -194,7 +194,7 @@ test("empty value in input (use value from config)", function () {
 test("getValue", function () {
   var f = f12, vf = vf12, 
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
       
   equal(e.combodate('getValue'), d.format(f), 'getValue ok');    
   equal(e.combodate('getValue', null).format(f), d.format(f), 'getValue as object ok');    

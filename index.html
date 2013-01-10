@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Combodate - dropdown date and time picker</title>
+        <!-- jquery -->
+        <script src="jquery/jquery-1.8.2.min.js"></script>
+
+        <!-- bootstrap -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<!--        <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">   -->
+
+        <!-- prettify -->  
+        <link rel="stylesheet" href="prettify/prettify-bootstrap.css">    
+        <script src="prettify/prettify.js"></script> 
+
+        <!-- momentjs -->  
+        <script src="momentjs/moment.min.js"></script> 
+        
+        <!-- combodate -->  
+        <script src="combodate.js"></script> 
+
+        <style type="text/css">
+            body {
+                padding-top: 50px;
+                padding-bottom: 30px;
+            }
+        </style>  
+    </head>
+    <body>
+
+       <!-- nav bar --> 
+       <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container">
+                <a href="index.html" class="brand">Combodate</a>
+                <ul class="nav">
+                    <li><a href="#">Demo</a></li>
+                    <li><a href="#docs">Docs</a></li>
+                    <li><a target="_blank" href="http://github.com/vitalets/clockface">GitHub</a></li>
+                </ul>
+             </div>  
+          </div>
+        </div> 
+
+
+    <div class="container">
+        
+        <div class="page-header">
+            <h1>Combodate <small>dropdown date and time picker</small></h1>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <h2>Intro</h2>
+                <p>This plugin replaces <code>&lt;input&gt;</code> with dropdown elements to pick day, month, year, hour, minutes and seconds.</p>
+                <ul>
+                    <li>support date, time, datetime</li>
+                    <li>12h / 24h format</li>
+                    <li>based on <a href="http://momentjs.com" target="_blank">momentjs</a></li>
+                </ul>
+
+            </div>
+        </div>        
+        
+        <div class="row">
+            <div class="span12">
+                <h2>Demo</h2>
+                <h4>Date</h4>
+                <div class="well">
+                   <button class="btn pull-right toggle">show input</button>
+                   <div id="div-date">
+                     <input type="text" id="date" data-format="DD-MM-YYYY" data-viewformat="D MMM YYYY" name="date" value="09-01-2013">
+                   </div>  
+                </div>
+                <p>Source</p>
+                <pre class="prettyprint linenums" id="src-date"></pre>
+                
+                <h4>Datetime <small>24h format</small></h4>
+                <div class="well">
+                   <button class="btn pull-right toggle">show input</button>
+                   <div id="div-datetime24">
+                   <input type="text" id="datetime24" data-format="DD-MM-YYYY HH:mm" data-viewformat="DD / MM / YYYY     HH : mm" name="datetime" value="21-12-2012 20:30">
+                   </div>
+                </div>
+                <p>Source</p>
+                <pre class="prettyprint linenums" id="src-datetime24"></pre>
+                
+                <h4>Datetime <small>12h format</small></h4>
+                <div class="well">
+                   <button class="btn pull-right toggle">show input</button>
+                   <div id="div-datetime12">
+                   <input type="text" id="datetime12" data-format="DD-MM-YYYY h:mm a" data-viewformat="DD / MM / YYYY     hh : mm a" name="datetime" value="21-12-2012 8:30 pm">
+                   </div>
+                </div>
+                <p>Source</p>
+                <pre class="prettyprint linenums" id="src-datetime12"></pre>    
+                
+                <h4>Time</h4>
+                <div class="well">
+                   <button class="btn pull-right toggle">show input</button>
+                   <div id="div-time">
+                   <input type="text" id="time" data-format="HH:mm" data-viewformat="HH : mm" name="datetime">
+                   </div>
+                </div>
+                <p>Source</p>
+                <pre class="prettyprint linenums" id="src-time"></pre>                             
+            </div>
+        </div>
+     
+        <!-- docs -->
+        <div class="row">
+          <div class="span12">
+            <div id="docs" style="padding-top: 40px"></div>
+            <h2>Docs</h2>
+            <h4>Get started</h4>
+            <p>1. Include <a href="http://momentjs.com">moment.js</a> and <code>combodate.js</code> on your page</p>
+<pre class="prettyprint linenums">
+&lt;script src="js/moment.min.js"&gt;&lt;/script&gt; 
+&lt;script src="js/combodate.js"&gt;&lt;/script&gt; 
+</pre>
+        <p>2. Markup <code>input</code> elements to be used for date and time values</p>
+<pre class="prettyprint linenums">
+&lt;input name="date_of_birth" value="15-05-1984" data-format="DD-MM-YYYY" data-viewformat="D MMM YYYY"&gt; 
+</pre>  
+        <p>3. Apply <code>$().combodate()</code> method with required options</p>
+<pre class="prettyprint linenums">
+$('input').combodate({
+    minYear: 1975,
+    maxYear: 2013,
+    minuteStep: 10
+});   
+</pre>      
+        <h4>Options</h4>
+        <p>All options can be defined via javascript or as <code>data-*</code> attributes.
+
+        </p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Name</th>
+                    <th style="width: 10%;">Type</th>
+                    <th style="width: 20%;">Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>format</td>
+                    <td>string</td>
+                    <td>DD-MM-YYYY HH:mm</td>
+                    <td>In this format date is stored in original input. <a href="http://momentjs.com/docs/#/parsing/string-format">List of tokens</a>.</td>
+                </tr>
+                
+                <tr>
+                    <td>viewformat</td>
+                    <td>string</td>
+                    <td>D / MMM / YYYY   H : mm</td>
+                    <td>In this format dropdowns are displayed. Spaces are converted to <code>&amp;nbsp;</code> for layout tuning.</td>
+                </tr>
+                
+                <tr>
+                    <td>value</td>
+                    <td>mixed</td>
+                    <td>null</td>
+                    <td>Initial value. Used as default value if not defined in <code>&lt;input&gt;</code>.</td>
+                </tr>
+                
+                <tr>
+                    <td>minYear</td>
+                    <td>int</td>
+                    <td>1970</td>
+                    <td>Minimum value in years dropdown.</td>
+                </tr>
+                
+                <tr>
+                    <td>maxYear</td>
+                    <td>int</td>
+                    <td>2015</td>
+                    <td>Maximum value in years dropdown.</td>
+                </tr>   
+                
+                <tr>
+                    <td>minuteStep</td>
+                    <td>int</td>
+                    <td>5</td>
+                    <td>Step of values in minutes dropdown.</td>
+                </tr> 
+                
+                <tr>
+                    <td>secondStep</td>
+                    <td>int</td>
+                    <td>1</td>
+                    <td>Step of values in seconds dropdown.</td>
+                </tr>    
+                
+                <tr>
+                    <td>firstItem</td>
+                    <td>string</td>
+                    <td>'empty'</td>
+                    <td>What is shown in first item of all dropdown. Can be <code>empty|name|none</code>.</td>
+                </tr>
+                                              
+                <tr>
+                    <td>errorClass</td>
+                    <td>string</td>
+                    <td>null</td>
+                    <td>Css class applied if date is incorrect, e.g. Feb, 31. If <code>null</code> dropdowns appears in red border.</td>
+                </tr>                              
+                                              
+            </tbody>
+        </table>
+
+        <h4>Methods</h4>
+        <p>All methods can be called as <code>$().editable('method', parameters)</code>.
+
+        </p>
+        <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th style="width: 20%;">Method</th>
+                <th style="width: 20%;">Parameters</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+            <tbody>
+
+                <tr>
+                    <td>getValue</td>
+                    <td>format</td>
+                    <td>Returns current value. If format is omitted, <code>options.format</code> is used.
+                    If format is <code>null</code>, returned value is Momentjs object.
+                    </td>
+                </tr> 
+                
+                <tr>
+                    <td>setValue</td>
+                    <td>value</td>
+                    <td>Sets new value. Value can be javascript Date() object or string in <code>options.format</code>.
+                    </td>
+                </tr>                 
+                
+            </tbody>
+        </table>       
+       
+<div class="alert alert-success">
+If you have any questions or ideas feel free to open issue on <a href="https://github.com/vitalets/combodate">github</a>. Thanks!
+</div>       
+        
+          </div>
+        </div>     
+
+        <footer class="footer">
+            <hr>
+            <p>&copy; <a href="http://github.com/vitalets">Vitaliy Potapov</a> 2012. Released under the MIT license.</p> 
+        </footer>
+    </div> <!--/container-->
+
+    
+        <script>
+            $(function(){
+               $.each(['date', 'datetime24', 'datetime12', 'time'], function(k, v) {
+                   $('#src-'+v).text(
+                       $.trim($('#div-'+v).html()) + '\n<script>\n' + $.trim($('#js-'+v).html()) + '\n<\/script>'                 
+                   );
+               });
+               
+               $('button.toggle').click(function(){
+                   $(this).parent().find('input').toggle();
+                   $(this).parent().find('.combodate').toggle();
+               });
+               
+               prettyPrint();
+            });
+        </script>  
+
+<script id="js-date">
+$(function(){
+    $('#date').combodate();    
+});
+</script>
+<script id="js-datetime24">
+$(function(){
+    $('#datetime24').combodate();  
+});
+</script>
+<script id="js-datetime12">
+$(function(){
+    $('#datetime12').combodate();  
+});
+</script>
+<script id="js-time">
+$(function(){
+    $('#time').combodate({
+        firstItem: 'name', //show 'hour' and 'minute' string at first item of dropdown
+        minuteStep: 1
+    });  
+});
+</script>
+        
+                       
+    </body>
+</html>

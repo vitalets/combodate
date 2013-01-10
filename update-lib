@@ -2,7 +2,14 @@
 cp ../lib/combodate.js ./
 
 #extract version
-version=$(head -2 combodate.js | sed -n 's/^.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p') 
+version=$(head -2 combodate.js | sed -n 's/^.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')
+
+#replace version in download link (zip)
+sed -i "s/archive\/[0-9]\+\.[0-9]\+\.[0-9]\+\.zip/archive\/$version.zip/g" index.html
+
+#replace version in download link (text)
+sed -i "s/strong> ([0-9]\+\.[0-9]\+\.[0-9]\+)/strong> ($version)/g" index.html
+ 
 echo updated to version $version
 
 

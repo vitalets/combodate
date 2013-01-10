@@ -196,8 +196,8 @@ test("getValue", function () {
       d = moment([1984, 4, 15, 20, 5, 10]),
       e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
       
-  equal(e.data('combodate').getValue(), d.format(f), 'getValue ok');    
-  equal(e.data('combodate').getValue(null).format(f), d.format(f), 'getValue as object ok');    
+  equal(e.combodate('getValue'), d.format(f), 'getValue ok');    
+  equal(e.combodate('getValue', null).format(f), d.format(f), 'getValue as object ok');    
 });
 
 test("setValue", function () {
@@ -208,15 +208,15 @@ test("setValue", function () {
       e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
   
   //set incorrect value
-  e.data('combodate').setValue('incorrect date');
+  e.combodate('setValue', 'incorrect date');
   equal(e.val(), d.format(f), 'value ok (incorrect)');
   
   //set date by string
-  e.data('combodate').setValue(d2.format(f));    
+  e.combodate('setValue', d2.format(f));    
   equal(e.val(), d2.format(f), 'value ok (string)');  
   
   //set date by object
-  e.data('combodate').setValue(d3.toDate());    
+  e.combodate('setValue', d3.toDate());    
   equal(e.val(), d3.format(f), 'value ok (object)');    
 });
 

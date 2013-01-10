@@ -1,7 +1,7 @@
 /**
 * Combodate - 1.0.0
-* Combobox datetime picker.
-* Turns text input into several comboboxes to pick day, month, year, hour, minute and second.
+* Dropdown date and time picker.
+* Replaces text input with dropdowns to pick day, month, year, hour, minute and second.
 * Uses momentjs as datetime library http://momentjs.com.
 * For i18n include corresponding file from https://github.com/timrwood/moment/tree/master/lang 
 *
@@ -362,6 +362,11 @@
         var d, args = Array.apply(null, arguments);
         args.shift();
 
+        //getValue returns date as string / object (not jQuery object)
+        if(option === 'getValue' && this.length && (d = this.eq(0).data('combodate'))) {
+          return d.getValue.apply(d, args);
+        }        
+        
         return this.each(function () {
             var $this = $(this),
             data = $this.data('combodate'),

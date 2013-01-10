@@ -10,9 +10,6 @@ This plugin converts `input` into dropdown elements to pick day, month, year, ho
 ## Demo, Docs and Download
 See **http://vitalets.github.com/combodate**
 
-## Contribution
-Your support is appreciated. 
-Please make pull requests on <code>dev</code> branch. Thank you!
 
 ## License
 Copyright (c) 2013 Vitaliy Potapov  

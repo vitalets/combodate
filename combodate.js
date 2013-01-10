@@ -378,7 +378,7 @@
     $.fn.combodate.defaults = {
          //in this format value stored in original input
         format: 'DD-MM-YYYY HH:mm',      
-        //in this format values in dropdowns are displayed
+        //in this format items in dropdowns are displayed
         viewformat: 'D / MMM / YYYY   H : mm',
         //initial value, can be `new Date()`    
         value: null,                       
@@ -387,9 +387,7 @@
         minuteStep: 5,
         secondStep: 1,
         firstItem: 'empty', //'name', 'empty', 'none'
-        errorClass: null,
-        dateSep: ' / ',
-        timeSep: ' : '
+        errorClass: null
     };
 
 }(window.jQuery));

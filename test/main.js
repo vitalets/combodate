@@ -18,7 +18,13 @@ counts = {
     minute: 60 / $.fn.combodate.defaults.minuteStep,   
     second: 60,
     ampm: 2   
-};
+},
+
+f24 = 'DD-MM-YYYY HH:mm:ss',
+vf24 = 'DD / MM / YYYY H : mm : ss',
+f12 = 'DD-MM-YYYY hh:mm:ss A',
+vf12 = 'DD MM YYYY h : mm : ss   a';
+
 
 test("should be defined on jquery object", function () {
   var e = $("<div></div>");
@@ -50,12 +56,13 @@ test("should store instance in data object", function () {
 });
 
 test("options via data-* attribute", function () {
-  var e = $('<input data-format="D-M-YY">').combodate();
+  var e = $('<input data-format="D-M-YY" data-viewformat="DD - MM - YYYY">').combodate();
   equal(e.data('combodate').options.format, 'D-M-YY', 'format taken from data-* attribute');
+  equal(e.data('combodate').options.viewformat, 'DD - MM - YYYY', 'viewformat taken from data-* attribute');
 });
 
 test("should hide original input and show selects (24h)", function () {
-  var e = $('<input data-format="DD-MM-YYYY HH:mm:ss">').appendTo('#qunit-fixture').combodate({
+  var e = $('<input data-viewformat="'+vf24+'">').appendTo('#qunit-fixture').combodate({
       firstItem: 'name'
   });
    
@@ -69,7 +76,7 @@ test("should hide original input and show selects (24h)", function () {
 });    
 
 test("should hide original input and show selects (12h)", function () {
-  var e = $('<input data-format="DD-MM-YYYY hh:mm:ss A">').appendTo('#qunit-fixture').combodate({
+  var e = $('<input data-viewformat="'+vf12+'">').appendTo('#qunit-fixture').combodate({
        firstItem: 'none'
   }),
   cnt = $.extend({}, counts, {hour: 13});
@@ -83,9 +90,9 @@ test("should hide original input and show selects (12h)", function () {
 });  
 
 test("should load value from input and save new values on change (24h)", function () {
-  var f = 'DD-MM-YYYY HH:mm:ss',
+  var f = f24, vf = vf24,
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
      
   //check values in combos
   $.each(map, function(k, v) {
@@ -109,9 +116,9 @@ test("should load value from input and save new values on change (24h)", functio
 });
 
 test("should load value from input and save new values on change (12h)", function () {
-  var f = 'DD-MM-YYYY hh:mm:ss A',
+  var f = f12, vf = vf12,
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
      
   //check values in combos
   $.each(map, function(k, v) {
@@ -154,8 +161,8 @@ test("should load value from input and save new values on change (12h)", functio
 });
 
 test("empty value in input (select nothing)", function () {
-  var  f = 'DD-MM-YYYY HH:mm:ss',
-       e = $('<input data-format="'+f+'">').appendTo('#qunit-fixture').combodate();
+  var f = f24, vf = vf24, 
+      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'">').appendTo('#qunit-fixture').combodate();
    
   $.each(map, function(k, v) {
       if(k === 'ampm') return;
@@ -166,9 +173,8 @@ test("empty value in input (select nothing)", function () {
 });  
 
 test("empty value in input (use value from config)", function () {
-  var  f = 'DD-MM-YYYY HH:mm:ss',
-       d = moment(),
-       e = $('<input data-format="'+f+'">').appendTo('#qunit-fixture').combodate({
+  var  f = f24, vf = vf24, d = moment(),
+       e = $('<input data-format="'+f+'" data-viewformat="'+vf+'">').appendTo('#qunit-fixture').combodate({
            value: d.toDate(),
            minuteStep: 1
        });
@@ -186,16 +192,16 @@ test("empty value in input (use value from config)", function () {
 
 
 test("getValue", function () {
-  var f = 'DD-MM-YYYY hh:mm:ss A',
+  var f = f12, vf = vf12, 
       d = moment([1984, 4, 15, 20, 5, 10]),
-      e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+      e = $('<input data-format="'+f+'" data-viewformat="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
       
   equal(e.data('combodate').getValue(), d.format(f), 'getValue ok');    
   equal(e.data('combodate').getValue(null).format(f), d.format(f), 'getValue as object ok');    
 });
 
 test("setValue", function () {
-  var f = 'DD-MM-YYYY hh:mm:ss A',
+  var f = f12, vf = vf12,
       d = moment([1984, 4, 15, 20, 5, 10]),
       d2 = moment([1985, 4, 16, 5, 2, 10]),
       d3 = moment([1986, 4, 17, 7, 4, 10]),
@@ -215,7 +221,7 @@ test("setValue", function () {
 });
 
 test("select incorrect date", function () {
-  var f = 'DD-MM-YYYY hh:mm:ss A',
+  var f = f12, vf = vf12,
       d = moment([1984, 1, 28]),
       e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({
           errorClass: 'error'
@@ -234,7 +240,7 @@ test("select incorrect date", function () {
 });
 
 test("firstItem", function () {
-  var f = 'DD-MM-YYYY hh:mm:ss A',
+  var f = f12, vf = vf12,
       d = moment([1984, 1, 28]),
       e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({ firstItem: 'name' });
   

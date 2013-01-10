@@ -15,5 +15,5 @@ Your support is appreciated.
 Please make pull requests on <code>dev</code> branch. Thank you!
 
 ## License
-Copyright (c) 2012 Vitaliy Potapov  
+Copyright (c) 2013 Vitaliy Potapov  
 Licensed under the MIT licenses.

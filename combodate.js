@@ -40,7 +40,7 @@
             this.initCombos();
             
             //update original input on change 
-            this.$widget.on('change', $.proxy(function(){
+            this.$widget.on('change', 'select', $.proxy(function(){
                 this.$element.val(this.getValue());
             }, this));
             
@@ -247,6 +247,9 @@
                 
             //getting selected values    
             $.each(this.map, function(k, v) {
+                if(k === 'ampm') {
+                    return;
+                }
                 var def = k === 'day' ? 1 : 0;
                   
                 values[k] = that['$'+k] ? parseInt(that['$'+k].val(), 10) : def; 
@@ -323,7 +326,7 @@
         /*
          highlight combos if date is invalid
         */
-        highlight: function(date) {
+        highlight: function(dt) {
             if(!dt.isValid()) {
                 if(this.options.errorClass) {
                     this.$widget.addClass(this.options.errorClass);

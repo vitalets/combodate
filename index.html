@@ -80,7 +80,7 @@
                 <div class="well">
                    <button class="btn pull-right toggle">show input</button>
                    <div id="div-date">
-                     <input type="text" id="date" data-format="DD-MM-YYYY" data-viewformat="D MMM YYYY" name="date" value="09-01-2013">
+                     <input type="text" id="date" data-format="DD-MM-YYYY" data-template="D MMM YYYY" name="date" value="09-01-2013">
                    </div>  
                 </div>
                 <p>Source</p>
@@ -90,7 +90,7 @@
                 <div class="well">
                    <button class="btn pull-right toggle">show input</button>
                    <div id="div-datetime24">
-                   <input type="text" id="datetime24" data-format="DD-MM-YYYY HH:mm" data-viewformat="DD / MM / YYYY     HH : mm" name="datetime" value="21-12-2012 20:30">
+                   <input type="text" id="datetime24" data-format="DD-MM-YYYY HH:mm" data-template="DD / MM / YYYY     HH : mm" name="datetime" value="21-12-2012 20:30">
                    </div>
                 </div>
                 <p>Source</p>
@@ -100,7 +100,7 @@
                 <div class="well">
                    <button class="btn pull-right toggle">show input</button>
                    <div id="div-datetime12">
-                   <input type="text" id="datetime12" data-format="DD-MM-YYYY h:mm a" data-viewformat="DD / MM / YYYY     hh : mm a" name="datetime" value="21-12-2012 8:30 pm">
+                   <input type="text" id="datetime12" data-format="DD-MM-YYYY h:mm a" data-template="DD / MM / YYYY     hh : mm a" name="datetime" value="21-12-2012 8:30 pm">
                    </div>
                 </div>
                 <p>Source</p>
@@ -110,7 +110,7 @@
                 <div class="well">
                    <button class="btn pull-right toggle">show input</button>
                    <div id="div-time">
-                   <input type="text" id="time" data-format="HH:mm" data-viewformat="HH : mm" name="datetime">
+                   <input type="text" id="time" data-format="HH:mm" data-template="HH : mm" name="datetime">
                    </div>
                 </div>
                 <p>Source</p>
@@ -132,7 +132,7 @@
 </pre>
         <p>2. Markup <code>input</code> elements to be used for date and time values</p>
 <pre class="prettyprint linenums">
-&lt;input name="date_of_birth" value="15-05-1984" data-format="DD-MM-YYYY" data-viewformat="D MMM YYYY"&gt; 
+&lt;input name="date_of_birth" value="15-05-1984" data-format="DD-MM-YYYY" data-template="D MMM YYYY"&gt; 
 </pre>  
         <p>3. Apply <code>$().combodate()</code> method with required options</p>
 <pre class="prettyprint linenums">
@@ -165,7 +165,7 @@ $('input').combodate({
                 </tr>
                 
                 <tr>
-                    <td>viewformat</td>
+                    <td>template</td>
                     <td>string</td>
                     <td>D / MMM / YYYY   H : mm</td>
                     <td>In this format dropdowns are displayed. Spaces are converted to <code>&amp;nbsp;</code> for layout tuning.</td>

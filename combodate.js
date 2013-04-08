@@ -174,10 +174,17 @@
             var items = this.initItems('y'), name, i, 
                 longNames = this.options.template.indexOf('YYYY') !== -1;
 
-            for(i=this.options.maxYear; i>=this.options.minYear; i--) {
-                name = longNames ? i : (i+'').substring(2);
-                items.push([i, name]);
-            }    
+            if (this.options.yearDescending) {
+                for(i=this.options.maxYear; i>=this.options.minYear; i--) {
+                    name = longNames ? i : (i+'').substring(2);
+                    items.push([i, name]);
+                }
+            } else {
+                for(i=this.options.minYear; i<=this.options.maxYear; i++) {
+                    name = longNames ? i : (i+'').substring(2);
+                    items.push([i, name]);
+                }
+            }
             return items;              
         },    
         
@@ -393,6 +400,7 @@
         value: null,                       
         minYear: 1970,
         maxYear: 2015,
+        yearDescending: true,
         minuteStep: 5,
         secondStep: 1,
         firstItem: 'empty', //'name', 'empty', 'none'

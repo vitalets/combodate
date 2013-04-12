@@ -173,18 +173,18 @@
         fillYear: function() {
             var items = this.initItems('y'), name, i, 
                 longNames = this.options.template.indexOf('YYYY') !== -1;
-
-            if (this.options.yearDescending) {
-                for(i=this.options.maxYear; i>=this.options.minYear; i--) {
-                    name = longNames ? i : (i+'').substring(2);
-                    items.push([i, name]);
-                }
-            } else {
-                for(i=this.options.minYear; i<=this.options.maxYear; i++) {
-                    name = longNames ? i : (i+'').substring(2);
-                    items.push([i, name]);
-                }
+           
+            for(i=this.options.maxYear; i>=this.options.minYear; i--) {
+                name = longNames ? i : (i+'').substring(2);
+                items.push([i, name]);
             }
+            
+            if(!this.options.yearDescending) {
+              items = items.sort(function(a, b){
+                  return a[0] > b[0] ? 1 : -1;
+              });  
+            }
+            
             return items;              
         },    
         

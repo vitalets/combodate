@@ -267,3 +267,17 @@ test("destroy", function () {
   ok(!e.siblings('.combodate').length, 'combodate removed');
   ok(e.is(':visible'), 'element visible');
 });
+
+test("minYear, maxYear, yearDescending", function () {
+  var f = f12, vf = vf12,
+      d = moment([2010, 1, 28]),
+      e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({ 
+        minYear: 2010,
+        maxYear: 2012,
+        yearDescending: false          
+      });
+  
+  equal(e.siblings('.combodate').find('.year').find('option').length, 4, 'years length ok');
+  equal(e.siblings('.combodate').find('.year').find('option').eq(1).text(), 2010, 'years order ok');
+  
+});

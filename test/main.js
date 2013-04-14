@@ -281,3 +281,27 @@ test("minYear, maxYear, yearDescending", function () {
   equal(e.siblings('.combodate').find('.year').find('option').eq(1).text(), 2010, 'years order ok');
   
 });
+
+test("roundTime", function () {
+  var f = f24, vf = vf24,
+      d = moment([1984, 4, 15, 20, 22, 39]),
+      e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({
+          minuteStep: 5,
+          secondStep: 5,
+          roundTime: false
+      });
+      
+  equal(e.siblings('.combodate').find('.minute').val(), '', 'minutes ok');
+  equal(e.siblings('.combodate').find('.second').val(), '', 'seconds ok');
+  
+  e.combodate('destroy');
+  
+  var e1 = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({
+          minuteStep: 5,
+          secondStep: 5,
+          roundTime: true
+      });
+    
+  equal(e1.siblings('.combodate').find('.minute').val(), 20, 'minutes ok');
+  equal(e1.siblings('.combodate').find('.second').val(), 40, 'seconds ok');
+});

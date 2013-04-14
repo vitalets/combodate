@@ -323,9 +323,36 @@
                        values.ampm = 'am';                  
                    } 
                }
+              
+               //function to find nearest value in select options
+               function getNearest($select, value) {
+                   var delta = {};
+                   $select.children('option').each(function(i, opt){
+                       var optValue = $(opt).attr('value'),
+                           distance;
+                           
+                       if(optValue === '') return;
+                       distance = Math.abs(optValue - value); 
+                       if(typeof delta.distance === 'undefined' || distance < delta.distance) {
+                           delta = {value: optValue, distance: distance};
+                       } 
+                   }); 
+                   return delta.value;
+               }              
+              
                
                $.each(values, function(k, v) {
+                   //call val() for each existing combo, e.g. this.$hour.val()
                    if(that['$'+k]) {
+                       
+                       if(k === 'minute' && that.options.minuteStep > 1 && that.options.roundTime) {
+                          v = getNearest(that['$'+k], v);
+                       }
+                       
+                       if(k === 'second' && that.options.secondStep > 1 && that.options.roundTime) {
+                          v = getNearest(that['$'+k], v);
+                       }                       
+                       
                        that['$'+k].val(v);                       
                    }
                });
@@ -404,7 +431,8 @@
         minuteStep: 5,
         secondStep: 1,
         firstItem: 'empty', //'name', 'empty', 'none'
-        errorClass: null
+        errorClass: null,
+        roundTime: true //whether to round minutes and seconds if step > 1
     };
 
 }(window.jQuery));

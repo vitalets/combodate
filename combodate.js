@@ -106,7 +106,7 @@
                 relTime;
                 
             if(this.options.firstItem === 'name') {
-                //need both to suuport moment ver < 2 and  >= 2
+                //need both to support moment ver < 2 and  >= 2
                 relTime = moment.relativeTime || moment.langData()._relativeTime; 
                 var header = typeof relTime[key] === 'function' ? relTime[key](1, true, key, false) : relTime[key];
                 //take last entry (see momentjs lang files structure) 
@@ -171,19 +171,15 @@
         fill year
         */
         fillYear: function() {
-            var items = this.initItems('y'), name, i, 
+            var items = [], name, i, 
                 longNames = this.options.template.indexOf('YYYY') !== -1;
            
             for(i=this.options.maxYear; i>=this.options.minYear; i--) {
                 name = longNames ? i : (i+'').substring(2);
-                items.push([i, name]);
+                items[this.options.yearDescending ? 'push' : 'unshift']([i, name]);
             }
             
-            if(!this.options.yearDescending) {
-              items = items.sort(function(a, b){
-                  return a[0] > b[0] ? 1 : -1;
-              });  
-            }
+            items = this.initItems('y').concat(items);
             
             return items;              
         },    

@@ -39,7 +39,7 @@
                     <li><a href="#docs">Docs</a></li>
                     <li><a href="https://github.com/vitalets/combodate">GitHub</a></li>
                 </ul>
-                
+         
                 <div style="padding-top: 10px; padding-left: 200px;" class="pull-left">
                     <!-- twitter -->
                     <div>
@@ -55,7 +55,7 @@
     <div class="container">
         
         <div class="page-header">
-            <a href="https://github.com/vitalets/combodate/archive/1.0.2.zip" class="btn btn-primary pull-right" style="margin-top: 10px"><strong>Download</strong> (1.0.2)</a>
+            <a href="https://github.com/vitalets/combodate/archive/1.0.3.zip" class="btn btn-primary pull-right" style="margin-top: 10px"><strong>Download</strong> (1.0.3)</a>
             <h1>Combodate <small>dropdown date and time picker</small></h1>
         </div>
 
@@ -191,6 +191,13 @@ $('input').combodate({
                     <td>int</td>
                     <td>2015</td>
                     <td>Maximum value in years dropdown.</td>
+                </tr>
+                
+                <tr>
+                    <td>yearDescending</td>
+                    <td>bool</td>
+                    <td>true</td>
+                    <td>Years order.</td>
                 </tr>   
                 
                 <tr>
@@ -219,7 +226,14 @@ $('input').combodate({
                     <td>string</td>
                     <td>null</td>
                     <td>Css class applied if date is incorrect, e.g. Feb, 31. If <code>null</code> dropdowns appears in red border.</td>
-                </tr>                              
+                </tr>   
+                
+                <tr>
+                    <td>roundTime</td>
+                    <td>bool</td>
+                    <td>true</td>
+                    <td>Whether to round minutes and seconds if step &gt; 1. E.g. if <code>minuteStep = 5</code> date <code>2013-05-04 12:21</code> will be shown as <code>2013-05-04 12:20</code>. </td>
+                </tr>                                            
                                               
             </tbody>
         </table>

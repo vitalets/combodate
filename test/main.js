@@ -79,7 +79,7 @@ test("should hide original input and show selects (12h)", function () {
   var e = $('<input data-template="'+vf12+'">').appendTo('#qunit-fixture').combodate({
        firstItem: 'none'
   }),
-  cnt = $.extend({}, counts, {hour: 13});
+  cnt = $.extend({}, counts, {hour: 12});
    
   ok(!e.is(':visible'), 'input hidden');
   $.each(map, function(k, v) {
@@ -158,6 +158,20 @@ test("should load value from input and save new values on change (12h)", functio
       equal(e.val(), d.format(f), 'input new value ok: '+k);
   });
   
+});
+
+test("confusion at noon and midnight", function () {
+  var f = f12, vf = vf12,
+      d = moment([1984, 4, 15, 12, 00, 00]),
+      d1 = moment([1984, 4, 15, 00, 00, 00]),
+      e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo($('<div>').appendTo('#qunit-fixture')).combodate(),
+      e1 = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d1.format(f)+'">').appendTo($('<div>').appendTo('#qunit-fixture')).combodate();
+
+      equal(e.siblings('.combodate').find('.hour').val(), '12', '12 hours ok');
+      equal(e.siblings('.combodate').find('.ampm').val(), 'pm', '12 ampm ok');
+      
+      equal(e1.siblings('.combodate').find('.hour').val(), '12', '00 hours ok');
+      equal(e1.siblings('.combodate').find('.ampm').val(), 'am', '00 ampm ok');
 });
 
 test("empty value in input (select nothing)", function () {

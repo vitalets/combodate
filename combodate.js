@@ -154,9 +154,10 @@
                 
             for(i=0; i<=11; i++) {
                 if(longNames) {
-                    name = moment().month(i).format('MMMM');
+                    //see https://github.com/timrwood/momentjs.com/pull/36
+                    name = moment().date(1).month(i).format('MMMM');
                 } else if(shortNames) {
-                    name = moment().month(i).format('MMM');
+                    name = moment().date(1).month(i).format('MMM');
                 } else if(twoDigit) {
                     name = this.leadZero(i+1);
                 } else {

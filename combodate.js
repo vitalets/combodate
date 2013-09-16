@@ -52,6 +52,7 @@
             //update original input on change 
             this.$widget.on('change', 'select', $.proxy(function(){
                 this.$element.val(this.getValue());
+                this.fixDay();
             }, this));
             
             this.$widget.find('select').css('width', 'auto');
@@ -61,6 +62,7 @@
             
             //set initial value
             this.setValue(this.$element.val() || this.options.value);
+            this.fixDay();
         },
         
         /*
@@ -253,7 +255,40 @@
                 ];
             return items;                              
         },                                       
-        
+
+        // If we have the wrong number of days selectable, let's fix this.
+        // For example if the selected month of the selected year has 30 days,
+        // but we have 31 day select boxes...
+
+        fixDay: function() {
+            var options  = this['$day'][0]; // our day <option>s
+            var select   = options[0].parentNode; // our day <select>
+
+            var year     = this['$year'].val(); // Selected year
+            var month    = parseInt(this['$month'].val(), 10) + 1; // The number (1-12) of the selected month.
+                                                                   // .val() is 0-11 so we need some math.
+
+            var max_days = new Date(year, month, 0).getDate(); // How many days the selected month actually has.
+
+            // the +1 here is to account for the one extra empty option.
+            if ( options.length == max_days + 1 ) { // We have the right number of days
+                return;
+            } else if ( options.length < max_days + 1 ) { // We have too few, create more selects.
+                for ( var i = options.length; i <= max_days; i++ ) {
+                    var option = document.createElement('option');
+                    option.setAttribute('value', i);
+                    option.innerHTML = i;
+
+                    select.appendChild(option);
+                }
+            } else {
+                for ( var i = options.length - 1; i > max_days; i-- ) { // We have too many, remove until we have the right number
+                    select.removeChild(options[i]);
+                }
+            }
+        },
+
+
         /*
          Returns current date value from combos. 
          If format not specified - `options.format` used.

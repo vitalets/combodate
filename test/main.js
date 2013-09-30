@@ -319,3 +319,51 @@ test("roundTime", function () {
   equal(e1.siblings('.combodate').find('.minute').val(), 20, 'minutes ok');
   equal(e1.siblings('.combodate').find('.second').val(), 40, 'seconds ok');
 });
+
+
+test("should change days count for different months", function () {
+  var f = f24, vf = vf24, d, e;
+  var opts = { firstItem: 'none', smartDays: true };
+
+  // April, 15 => 30
+  d = moment([1984, 3, 15, 20, 5, 10]), 
+  e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate(opts);
+  equal(e.siblings('.combodate').find('.day > option').length, 30, '30 ok');
+
+  // Feb, 15 => 29
+  $('#qunit-fixture').empty();
+  d = moment([2000, 1, 15, 20, 5, 10]); 
+  e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate(opts);
+  equal(e.siblings('.combodate').find('.day > option').length, 29, '29 ok');  
+
+  // Feb, 15 => 31 (smartDays: off)
+  $('#qunit-fixture').empty();
+  d = moment([2000, 1, 15, 20, 5, 10]); 
+  e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({ 
+    firstItem: 'none', 
+    smartDays: false 
+  });
+  equal(e.siblings('.combodate').find('.day > option').length, 31, '31 ok (smartDays off)');  
+
+  // null => 31
+  $('#qunit-fixture').empty();
+  d = '';
+  e = $('<input data-format="'+f+'" data-template="'+vf+'" value="">').appendTo('#qunit-fixture').combodate(opts);
+  equal(e.siblings('.combodate').find('.day > option').length, 31, '31 ok (empty value)');  
+
+  // May, 15 => 31
+  $('#qunit-fixture').empty();
+  d = moment([1984, 4, 31, 20, 5, 10]);
+  e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate(opts);
+  equal(e.siblings('.combodate').find('.day > option').length, 31, '31 ok');
+
+  // change month via combo: june
+  e.siblings('.combodate').find('.month').val(5).trigger('change');
+  equal(e.siblings('.combodate').find('.day > option').length, 30, 'change via combo');
+
+  // change month via setValue: Feb, 2001
+  e.combodate('setValue', moment([2001, 1, 15, 20, 5, 10]));
+  equal(e.siblings('.combodate').find('.day > option').length, 28, 'setValue ok');
+});
+
+

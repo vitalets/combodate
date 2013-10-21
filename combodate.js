@@ -51,7 +51,7 @@
             
             //update original input on change 
             this.$widget.on('change', 'select', $.proxy(function(e) {
-                this.$element.val(this.getValue());
+                this.$element.val(this.getValue()).change();
                 // update days count if month or year changes
                 if (this.options.smartDays) {
                     if ($(e.target).is('.month') || $(e.target).is('.year')) {
@@ -404,7 +404,7 @@
                     this.fillCombo('day');
                 }
                
-               this.$element.val(dt.format(this.options.format));
+               this.$element.val(dt.format(this.options.format)).change();
             }
         },
         

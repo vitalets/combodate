@@ -8,7 +8,7 @@
   "main": "combodate.js",
   "ignore": [
     "**/.*",
-    "moment*.js"
+    "moment*.js",
     "test"
   ],
   "dependencies": {

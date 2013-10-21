@@ -92,7 +92,12 @@ test("should hide original input and show selects (12h)", function () {
 test("should load value from input and save new values on change (24h)", function () {
   var f = f24, vf = vf24,
       d = moment([1984, 4, 15, 20, 5, 10]),
+      change_counter = 0, i = 0,
       e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+
+  e.on('change', function(){
+    change_counter++;
+  });    
      
   //check values in combos
   $.each(map, function(k, v) {
@@ -112,6 +117,9 @@ test("should load value from input and save new values on change (24h)", functio
       d[v](newVal);
       
       equal(e.val(), d.format(f), 'input new value ok: '+k);
+
+      i++;
+      equal(change_counter, i, 'input chnage called');
   });
 });
 
@@ -219,19 +227,29 @@ test("setValue", function () {
       d = moment([1984, 4, 15, 20, 5, 10]),
       d2 = moment([1985, 4, 16, 5, 2, 10]),
       d3 = moment([1986, 4, 17, 7, 4, 10]),
+      change_counter = 0, i = 0,
       e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate();
+
+  e.on('change', function() {
+    change_counter++;
+  });    
   
   //set incorrect value
   e.combodate('setValue', 'incorrect date');
   equal(e.val(), d.format(f), 'value ok (incorrect)');
+  equal(change_counter, i, 'input change not called');
   
   //set date by string
   e.combodate('setValue', d2.format(f));    
-  equal(e.val(), d2.format(f), 'value ok (string)');  
+  equal(e.val(), d2.format(f), 'value ok (string)');
+  i++; 
+  equal(change_counter, i, 'input change called'); 
   
   //set date by object
   e.combodate('setValue', d3.toDate());    
-  equal(e.val(), d3.format(f), 'value ok (object)');    
+  equal(e.val(), d3.format(f), 'value ok (object)');
+  i++; 
+  equal(change_counter, i, 'input change called');       
 });
 
 test("select incorrect date", function () {

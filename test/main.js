@@ -384,4 +384,18 @@ test("should change days count for different months", function () {
   equal(e.siblings('.combodate').find('.day > option').length, 28, 'setValue ok');
 });
 
+test("customClass", function () {
+  var f = f24, vf = vf24, 
+      e = $('<input data-format="'+f+'" data-template="'+vf+'">').appendTo('#qunit-fixture').combodate({
+        customClass: 'abc'
+      });
+   
+  $.each(map, function(k, v) {
+      if(k === 'ampm') return;
+      var sel = e.siblings('.combodate').find('.'+k);
+      ok(sel.hasClass('abc'), k+' has custom class');
+  });
+ 
+}); 
+
 

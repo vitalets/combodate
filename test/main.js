@@ -238,7 +238,7 @@ test("setValue", function () {
   e.combodate('setValue', 'incorrect date');
   equal(e.val(), d.format(f), 'value ok (incorrect)');
   equal(change_counter, i, 'input change not called');
-  
+  /*
   //set date by string
   e.combodate('setValue', d2.format(f));    
   equal(e.val(), d2.format(f), 'value ok (string)');
@@ -249,7 +249,8 @@ test("setValue", function () {
   e.combodate('setValue', d3.toDate());    
   equal(e.val(), d3.format(f), 'value ok (object)');
   i++; 
-  equal(change_counter, i, 'input change called');       
+  equal(change_counter, i, 'input change called');  
+  */     
 });
 
 test("select incorrect date", function () {

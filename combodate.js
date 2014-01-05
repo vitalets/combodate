@@ -1,5 +1,5 @@
 /**
-* Combodate - 1.0.6
+* Combodate - 1.0.7
 * Dropdown date and time picker.
 * Converts text input into dropdowns to pick day, month, year, hour, minute and second.
 * Uses momentjs as datetime library http://momentjs.com.
@@ -340,7 +340,8 @@
                 return;
             }
             
-            var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
+            // parse in strict mode (third param `true`)
+            var dt = typeof value === 'string' ? moment(value, this.options.format, true) : moment(value),
                 that = this,
                 values = {};
             

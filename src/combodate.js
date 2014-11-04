@@ -3,18 +3,18 @@
 * Dropdown date and time picker.
 * Converts text input into dropdowns to pick day, month, year, hour, minute and second.
 * Uses momentjs as datetime library http://momentjs.com.
-* For i18n include corresponding file from https://github.com/timrwood/moment/tree/master/lang 
+* For i18n include corresponding file from https://github.com/timrwood/moment/tree/master/lang
 *
 * Confusion at noon and midnight - see http://en.wikipedia.org/wiki/12-hour_clock#Confusion_at_noon_and_midnight
-* In combodate: 
+* In combodate:
 * 12:00 pm --> 12:00 (24-h format, midday)
 * 12:00 am --> 00:00 (24-h format, midnight, start of day)
-* 
+*
 * Differs from momentjs parse rules:
 * 00:00 pm, 12:00 pm --> 12:00 (24-h format, day not change)
 * 00:00 am, 12:00 am --> 00:00 (24-h format, day not change)
-* 
-* 
+*
+*
 * Author: Vitaliy Potapov
 * Project page: http://github.com/vitalets/combodate
 * Copyright (c) 2012 Vitaliy Potapov. Released under MIT License.
@@ -28,28 +28,28 @@
             return;
         }
         this.options = $.extend({}, $.fn.combodate.defaults, options, this.$element.data());
-        this.init();  
+        this.init();
      };
 
     Combodate.prototype = {
-        constructor: Combodate, 
+        constructor: Combodate,
         init: function () {
             this.map = {
                 //key   regexp    moment.method
-                day:    ['D',    'date'], 
-                month:  ['M',    'month'], 
-                year:   ['Y',    'year'], 
+                day:    ['D',    'date'],
+                month:  ['M',    'month'],
+                year:   ['Y',    'year'],
                 hour:   ['[Hh]', 'hours'],
-                minute: ['m',    'minutes'], 
+                minute: ['m',    'minutes'],
                 second: ['s',    'seconds'],
-                ampm:   ['[Aa]', ''] 
+                ampm:   ['[Aa]', '']
             };
-            
+
             this.$widget = $('<span class="combodate"></span>').html(this.getTemplate());
-                      
+
             this.initCombos();
-            
-            //update original input on change 
+
+            //update original input on change
             this.$widget.on('change', 'select', $.proxy(function(e) {
                 this.$element.val(this.getValue()).change();
                 // update days count if month or year changes
@@ -59,28 +59,28 @@
                     }
                 }
             }, this));
-            
+
             this.$widget.find('select').css('width', 'auto');
-                                       
-            // hide original input and insert widget                                       
+
+            // hide original input and insert widget
             this.$element.hide().after(this.$widget);
-            
+
             // set initial value
             this.setValue(this.$element.val() || this.options.value);
         },
-        
+
         /*
-         Replace tokens in template with <select> elements 
-        */         
+         Replace tokens in template with <select> elements
+        */
         getTemplate: function() {
             var tpl = this.options.template;
 
             //first pass
             $.each(this.map, function(k, v) {
-                v = v[0]; 
+                v = v[0];
                 var r = new RegExp(v+'+'),
                     token = v.length > 1 ? v.substring(1, 2) : v;
-                    
+
                 tpl = tpl.replace(r, '{'+token+'}');
             });
 
@@ -91,16 +91,16 @@
             $.each(this.map, function(k, v) {
                 v = v[0];
                 var token = v.length > 1 ? v.substring(1, 2) : v;
-                    
+
                 tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"></select>');
-            });   
+            });
 
             return tpl;
         },
-        
+
         /*
-         Initialize combos that presents in template 
-        */        
+         Initialize combos that presents in template
+        */
         initCombos: function() {
             for (var k in this.map) {
                 var $c = this.$widget.find('.'+k);
@@ -112,8 +112,8 @@
         },
 
         /*
-         Fill combo with items 
-        */        
+         Fill combo with items
+        */
         fillCombo: function(k) {
             var $combo = this['$'+k];
             if (!$combo) {
@@ -121,7 +121,7 @@
             }
 
             // define method name to fill items, e.g `fillDays`
-            var f = 'fill' + k.charAt(0).toUpperCase() + k.slice(1); 
+            var f = 'fill' + k.charAt(0).toUpperCase() + k.slice(1);
             var items = this[f]();
             var value = $combo.val();
 
@@ -134,24 +134,24 @@
         },
 
         /*
-         Initialize items of combos. Handles `firstItem` option 
+         Initialize items of combos. Handles `firstItem` option
         */
         fillCommon: function(key) {
             var values = [],
                 relTime;
-                
+
             if(this.options.firstItem === 'name') {
                 //need both to support moment ver < 2 and  >= 2
-                relTime = moment.relativeTime || moment.langData()._relativeTime; 
+                relTime = moment.relativeTime || moment.langData()._relativeTime;
                 var header = typeof relTime[key] === 'function' ? relTime[key](1, true, key, false) : relTime[key];
-                //take last entry (see momentjs lang files structure) 
-                header = header.split(' ').reverse()[0];                
+                //take last entry (see momentjs lang files structure)
+                header = header.split(' ').reverse()[0];
                 values.push(['', header]);
             } else if(this.options.firstItem === 'empty') {
                 values.push(['', '']);
             }
             return values;
-        },  
+        },
 
 
         /*
@@ -177,18 +177,18 @@
                 name = twoDigit ? this.leadZero(i) : i;
                 items.push([i, name]);
             }
-            return items;        
+            return items;
         },
-        
+
         /*
         fill month
         */
         fillMonth: function() {
-            var items = this.fillCommon('M'), name, i, 
+            var items = this.fillCommon('M'), name, i,
                 longNames = this.options.template.indexOf('MMMM') !== -1,
                 shortNames = this.options.template.indexOf('MMM') !== -1,
                 twoDigit = this.options.template.indexOf('MM') !== -1;
-                
+
             for(i=0; i<=11; i++) {
                 if(longNames) {
                     //see https://github.com/timrwood/momentjs.com/pull/36
@@ -201,27 +201,27 @@
                     name = i+1;
                 }
                 items.push([i, name]);
-            } 
+            }
             return items;
-        },  
-        
+        },
+
         /*
         fill year
         */
         fillYear: function() {
-            var items = [], name, i, 
+            var items = [], name, i,
                 longNames = this.options.template.indexOf('YYYY') !== -1;
-           
+
             for(i=this.options.maxYear; i>=this.options.minYear; i--) {
                 name = longNames ? i : (i+'').substring(2);
                 items[this.options.yearDescending ? 'push' : 'unshift']([i, name]);
             }
-            
+
             items = this.fillCommon('y').concat(items);
-            
-            return items;              
-        },    
-        
+
+            return items;
+        },
+
         /*
         fill hour
         */
@@ -230,16 +230,16 @@
                 h12 = this.options.template.indexOf('h') !== -1,
                 h24 = this.options.template.indexOf('H') !== -1,
                 twoDigit = this.options.template.toLowerCase().indexOf('hh') !== -1,
-                min = h12 ? 1 : 0, 
+                min = h12 ? 1 : 0,
                 max = h12 ? 12 : 23;
-                
+
             for(i=min; i<=max; i++) {
                 name = twoDigit ? this.leadZero(i) : i;
                 items.push([i, name]);
-            } 
-            return items;                 
-        },    
-        
+            }
+            return items;
+        },
+
         /*
         fill minute
         */
@@ -250,10 +250,10 @@
             for(i=0; i<=59; i+= this.options.minuteStep) {
                 name = twoDigit ? this.leadZero(i) : i;
                 items.push([i, name]);
-            }    
-            return items;              
-        },  
-        
+            }
+            return items;
+        },
+
         /*
         fill second
         */
@@ -264,85 +264,85 @@
             for(i=0; i<=59; i+= this.options.secondStep) {
                 name = twoDigit ? this.leadZero(i) : i;
                 items.push([i, name]);
-            }    
-            return items;              
-        },  
-        
+            }
+            return items;
+        },
+
         /*
         fill ampm
         */
         fillAmpm: function() {
             var ampmL = this.options.template.indexOf('a') !== -1,
-                ampmU = this.options.template.indexOf('A') !== -1,            
+                ampmU = this.options.template.indexOf('A') !== -1,
                 items = [
                     ['am', ampmL ? 'am' : 'AM'],
                     ['pm', ampmL ? 'pm' : 'PM']
                 ];
-            return items;                              
-        },                                       
+            return items;
+        },
 
         /*
-         Returns current date value from combos. 
+         Returns current date value from combos.
          If format not specified - `options.format` used.
          If format = `null` - Moment object returned.
         */
         getValue: function(format) {
-            var dt, values = {}, 
+            var dt, values = {},
                 that = this,
                 notSelected = false;
-                
-            //getting selected values    
+
+            //getting selected values
             $.each(this.map, function(k, v) {
                 if(k === 'ampm') {
                     return;
                 }
                 var def = k === 'day' ? 1 : 0;
-                  
-                values[k] = that['$'+k] ? parseInt(that['$'+k].val(), 10) : def; 
-                
+
+                values[k] = that['$'+k] ? parseInt(that['$'+k].val(), 10) : def;
+
                 if(isNaN(values[k])) {
                    notSelected = true;
-                   return false; 
+                   return false;
                 }
             });
-            
+
             //if at least one visible combo not selected - return empty string
             if(notSelected) {
                return '';
             }
-            
-            //convert hours 12h --> 24h 
+
+            //convert hours 12h --> 24h
             if(this.$ampm) {
                 //12:00 pm --> 12:00 (24-h format, midday), 12:00 am --> 00:00 (24-h format, midnight, start of day)
                 if(values.hour === 12) {
-                    values.hour = this.$ampm.val() === 'am' ? 0 : 12;                    
+                    values.hour = this.$ampm.val() === 'am' ? 0 : 12;
                 } else {
                     values.hour = this.$ampm.val() === 'am' ? values.hour : values.hour+12;
                 }
-            }    
-            
+            }
+
             dt = moment([values.year, values.month, values.day, values.hour, values.minute, values.second]);
-            
+
             //highlight invalid date
             this.highlight(dt);
-                              
+
             format = format === undefined ? this.options.format : format;
             if(format === null) {
-               return dt.isValid() ? dt : null; 
+               return dt.isValid() ? dt : null;
             } else {
-               return dt.isValid() ? dt.format(format) : ''; 
-            }           
+               return dt.isValid() ? dt.format(format) : '';
+            }
         },
-        
+
         setValue: function(value) {
             if(!value) {
                 return;
             }
-            
+
             var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
                 that = this,
                 values = {};
-            
+
             //function to find nearest value in select options
             function getNearest($select, value) {
                 var delta = {};
@@ -351,23 +351,23 @@
                     distance;
 
                     if(optValue === '') return;
-                    distance = Math.abs(optValue - value); 
+                    distance = Math.abs(optValue - value);
                     if(typeof delta.distance === 'undefined' || distance < delta.distance) {
                         delta = {value: optValue, distance: distance};
-                    } 
-                }); 
+                    }
+                });
                 return delta.value;
-            }             
-            
+            }
+
             if(dt.isValid()) {
                 //read values from date object
                 $.each(this.map, function(k, v) {
                     if(k === 'ampm') {
-                       return; 
+                       return;
                     }
                     values[k] = dt[v[1]]();
                 });
-               
+
                 if(this.$ampm) {
                     //12:00 pm --> 12:00 (24-h format, midday), 12:00 am --> 00:00 (24-h format, midnight, start of day)
                     if(values.hour >= 12) {
@@ -380,21 +380,21 @@
                         if(values.hour === 0) {
                             values.hour = 12;
                         }
-                    } 
+                    }
                 }
-               
+
                 $.each(values, function(k, v) {
                     //call val() for each existing combo, e.g. this.$hour.val()
                     if(that['$'+k]) {
-                       
+
                         if(k === 'minute' && that.options.minuteStep > 1 && that.options.roundTime) {
                            v = getNearest(that['$'+k], v);
                         }
-                       
+
                         if(k === 'second' && that.options.secondStep > 1 && that.options.roundTime) {
                            v = getNearest(that['$'+k], v);
-                        }                       
-                       
+                        }
+
                         that['$'+k].val(v);
                     }
                 });
@@ -403,11 +403,11 @@
                 if (this.options.smartDays) {
                     this.fillCombo('day');
                 }
-               
+
                this.$element.val(dt.format(this.options.format)).change();
             }
         },
-        
+
         /*
          highlight combos if date is invalid
         */
@@ -418,29 +418,29 @@
                 } else {
                     //store original border color
                     if(!this.borderColor) {
-                        this.borderColor = this.$widget.find('select').css('border-color'); 
+                        this.borderColor = this.$widget.find('select').css('border-color');
                     }
                     this.$widget.find('select').css('border-color', 'red');
-                } 
+                }
             } else {
                 if(this.options.errorClass) {
                     this.$widget.removeClass(this.options.errorClass);
                 } else {
                     this.$widget.find('select').css('border-color', this.borderColor);
-                }  
+                }
             }
         },
-        
+
         leadZero: function(v) {
-            return v <= 9 ? '0' + v : v; 
+            return v <= 9 ? '0' + v : v;
         },
-        
+
         destroy: function() {
             this.$widget.remove();
             this.$element.removeData('combodate').show();
         }
-        
-        //todo: clear method        
+
+        //todo: clear method
     };
 
     $.fn.combodate = function ( option ) {
@@ -450,8 +450,8 @@
         //getValue returns date as string / object (not jQuery object)
         if(option === 'getValue' && this.length && (d = this.eq(0).data('combodate'))) {
           return d.getValue.apply(d, args);
-        }        
-        
+        }
+
         return this.each(function () {
             var $this = $(this),
             data = $this.data('combodate'),
@@ -463,15 +463,15 @@
                 data[option].apply(data, args);
             }
         });
-    };  
-    
+    };
+
     $.fn.combodate.defaults = {
          //in this format value stored in original input
-        format: 'DD-MM-YYYY HH:mm',      
+        format: 'DD-MM-YYYY HH:mm',
         //in this format items in dropdowns are displayed
         template: 'D / MMM / YYYY   H : mm',
-        //initial value, can be `new Date()`    
-        value: null,                       
+        //initial value, can be `new Date()`
+        value: null,
         minYear: 1970,
         maxYear: 2015,
         yearDescending: true,

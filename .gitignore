@@ -1,1 +1,2 @@
-lint
+/node_modules
+/bower_components

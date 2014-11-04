@@ -5,15 +5,23 @@
   "author": "https://github.com/vitalets",
   "license": "MIT",
   "homepage": "https://github.com/vitalets/combodate",
-  "main": "combodate.js",
+  "main": "src/combodate.js",
   "ignore": [
     "**/.*",
-    "moment*.js",
-    "test"
+    "node_modules",
+    "test",
+    "*.md",
+    "Gruntfile.js",
+    "package.json"
   ],
   "dependencies": {
-    "moment": "*"
+    "moment": "*",
+    "jquery": "*"
   },
   "devDependencies": {
+    "qunit": "~1.15.0",
+    "jquery-2.1.1.js": "http://code.jquery.com/jquery-2.1.1.js",
+    "jquery-1.11.1.js": "http://code.jquery.com/jquery-1.11.1.js",
+    "moment172": "moment#1.7.2"
   }
 }

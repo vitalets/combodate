@@ -185,12 +185,18 @@
         */
         fillMonth: function() {
             var items = this.fillCommon('M'), name, i,
+                longNamesNum = this.options.template.indexOf('MMMMMM') !== -1,
+                shortNamesNum = this.options.template.indexOf('MMMMM') !== -1,
                 longNames = this.options.template.indexOf('MMMM') !== -1,
                 shortNames = this.options.template.indexOf('MMM') !== -1,
                 twoDigit = this.options.template.indexOf('MM') !== -1;
 
             for(i=0; i<=11; i++) {
-                if(longNames) {
+                if (longNamesNum) {
+                    name = moment().date(1).month(i).format('MM - MMMM');
+                } else if (shortNamesNum) {
+                    name = moment().date(1).month(i).format('MM - MMM');
+                } else if(longNames) {
                     //see https://github.com/timrwood/momentjs.com/pull/36
                     name = moment().date(1).month(i).format('MMMM');
                 } else if(shortNames) {

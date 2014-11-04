@@ -74,6 +74,7 @@
         */
         getTemplate: function() {
             var tpl = this.options.template;
+            var inputDisabled = this.$element.prop('disabled');
 
             //first pass
             $.each(this.map, function(k, v) {
@@ -92,7 +93,8 @@
                 v = v[0];
                 var token = v.length > 1 ? v.substring(1, 2) : v;
 
-                tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"></select>');
+                tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"'+
+                     (inputDisabled ? ' disabled="disabled"' : '')+'></select>');
             });
 
             return tpl;

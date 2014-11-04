@@ -216,3 +216,17 @@ test("destroy", function () {
   ok(!e.siblings('.combodate').length, 'combodate removed');
   ok(e.is(':visible'), 'element visible');
 });
+
+test("if input disabled, combodate should be disabled too", function () {
+  var f = f24, vf = vf24,
+      e = $('<input disabled="disabled" data-format="'+f+'" data-template="'+vf+'">')
+      .appendTo('#qunit-fixture')
+      .combodate();
+
+  $.each(map, function(k, v) {
+      if(k === 'ampm') return;
+      var sel = e.siblings('.combodate').find('.'+k);
+      ok(sel.prop('disabled'), k + ' disabled');
+  });
+
+});

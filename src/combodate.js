@@ -78,6 +78,7 @@
         getTemplate: function() {
             var tpl = this.options.template;
             var inputDisabled = this.$element.prop('disabled');
+            var customClass = this.options.customClass;
 
             //first pass
             $.each(this.map, function(k, v) {
@@ -96,7 +97,7 @@
                 v = v[0];
                 var token = v.length > 1 ? v.substring(1, 2) : v;
 
-                tpl = tpl.replace('{'+token+'}', '<select class="'+k+'"'+
+                tpl = tpl.replace('{'+token+'}', '<select class="'+k+' '+customClass +'"'+
                      (inputDisabled ? ' disabled="disabled"' : '')+'></select>');
             });
 
@@ -367,7 +368,8 @@
                 return;
             }
 
-            var dt = typeof value === 'string' ? moment(value, this.options.format) : moment(value),
+            // parse in strict mode (third param `true`)
+            var dt = typeof value === 'string' ? moment(value, this.options.format, true) : moment(value),
                 that = this,
                 values = {};
 
@@ -510,6 +512,7 @@
         secondStep: 1,
         firstItem: 'empty', //'name', 'empty', 'none'
         errorClass: null,
+        customClass: '',
         roundTime: true, // whether to round minutes and seconds if step > 1
         smartDays: false // whether days in combo depend on selected month: 31, 30, 28
     };

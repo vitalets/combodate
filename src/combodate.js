@@ -49,6 +49,9 @@
 
             this.initCombos();
 
+            // internal momentjs instance
+            this.datetime = null;
+
             //update original input on change
             this.$widget.on('change', 'select', $.proxy(function(e) {
                 this.$element.val(this.getValue()).change();
@@ -304,9 +307,19 @@
                 if(k === 'ampm') {
                     return;
                 }
-                var def = k === 'day' ? 1 : 0;
 
-                values[k] = that['$'+k] ? parseInt(that['$'+k].val(), 10) : def;
+                // if combo exists, use it's value, otherwise use default
+                if (that['$'+k]) {
+                    values[k] = parseInt(that['$'+k].val(), 10);
+                } else {
+                    var defaultValue;
+                    if (that.datetime) {
+                        defaultValue = that.datetime[v[1]]();
+                    } else {
+                        defaultValue = k === 'day' ? 1 : 0;
+                    }
+                    values[k] = defaultValue;
+                }
 
                 if(isNaN(values[k])) {
                    notSelected = true;
@@ -329,7 +342,14 @@
                 }
             }
 
-            dt = moment([values.year, values.month, values.day, values.hour, values.minute, values.second]);
+            dt = moment([
+                values.year,
+                values.month,
+                values.day,
+                values.hour,
+                values.minute,
+                values.second
+            ]);
 
             //highlight invalid date
             this.highlight(dt);
@@ -412,7 +432,10 @@
                     this.fillCombo('day');
                 }
 
-               this.$element.val(dt.format(this.options.format)).change();
+                this.$element.val(dt.format(this.options.format)).change();
+                this.datetime = dt;
+            } else {
+                this.datetime = null;
             }
         },
 

@@ -144,8 +144,8 @@ test("should load value from input and save new values on change (12h)", functio
 
 test("confusion at noon and midnight", function () {
   var f = f12, vf = vf12,
-      d = moment([1984, 4, 15, 12, 00, 00]),
-      d1 = moment([1984, 4, 15, 00, 00, 00]),
+      d = moment([1984, 4, 15, 12, 0, 0]),
+      d1 = moment([1984, 4, 15, 0, 0, 0]),
       e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo($('<div>').appendTo('#qunit-fixture')).combodate(),
       e1 = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d1.format(f)+'">').appendTo($('<div>').appendTo('#qunit-fixture')).combodate();
 

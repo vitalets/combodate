@@ -8,7 +8,7 @@ test("firstItem", function () {
   equal(e.siblings('.combodate').find('.day').find('option').eq(0).text(), 'day', 'firstItem name ok');
 
   $('#qunit-fixture').empty();
-  e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({ firstItem: 'empty' }),
+  e = $('<input data-format="'+f+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate({ firstItem: 'empty' });
   equal(e.siblings('.combodate').find('.day').find('option').eq(0).text(), '', 'firstItem empty ok');
 
   $('#qunit-fixture').empty();
@@ -68,7 +68,7 @@ test("smartDays: change days count for different months", function () {
   };
 
   // April, 15 => 30
-  d = moment([1984, 3, 15, 20, 5, 10]),
+  d = moment([1984, 3, 15, 20, 5, 10]);
   e = $('<input data-format="'+f+'" data-template="'+vf+'" value="'+d.format(f)+'">').appendTo('#qunit-fixture').combodate(opts);
   equal(e.siblings('.combodate').find('.day > option').length, 30, '30 ok');
 

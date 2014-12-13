@@ -15,10 +15,12 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "node_modules/.bin/node-qunit-phantomjs test/index.html"
+    "test": "node_modules/.bin/node-qunit-phantomjs test/index.html",
+    "jshint": "node_modules/.bin/jshint src test/specs"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
+    "jshint": "^2.5.10",
     "node-qunit-phantomjs": "^1.0.0"
   }
 }

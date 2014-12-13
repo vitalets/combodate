@@ -148,7 +148,11 @@
 
             if(this.options.firstItem === 'name') {
                 //need both to support moment ver < 2 and  >= 2
-                relTime = moment.relativeTime || moment.langData()._relativeTime;
+                if (moment.localeData) {
+                    relTime = moment.localeData()._relativeTime;
+                } else {
+                    relTime = moment.relativeTime || moment.langData()._relativeTime;
+                }
                 var header = typeof relTime[key] === 'function' ? relTime[key](1, true, key, false) : relTime[key];
                 //take last entry (see momentjs lang files structure)
                 header = header.split(' ').reverse()[0];

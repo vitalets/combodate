@@ -14,7 +14,11 @@
   "engines": {
     "node": ">= 0.8.0"
   },
+  "scripts": {
+    "test": "node_modules/.bin/node-qunit-phantomjs test/index.html"
+  },
   "devDependencies": {
-    "grunt-contrib-jshint": "^0.10.0"
+    "grunt-contrib-jshint": "^0.10.0",
+    "node-qunit-phantomjs": "^1.0.0"
   }
 }

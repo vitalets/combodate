@@ -168,7 +168,7 @@ test("empty value in input (select nothing)", function () {
 
 });
 
-test("empty value in input (use value from config)", function () {
+test("use value from config defined as Date (empty value in input)", function () {
   var  f = f24, vf = vf24, d = moment(),
        e = $('<input data-format="'+f+'" data-template="'+vf+'">').appendTo('#qunit-fixture').combodate({
            value: d.toDate(),

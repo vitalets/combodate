@@ -22,3 +22,8 @@ var f24 = 'DD-MM-YYYY HH:mm:ss';
 var vf24 = 'DD / MM / YYYY H : mm : ss';
 var f12 = 'DD-MM-YYYY hh:mm:ss A';
 var vf12 = 'DD MM YYYY h : mm : ss   a';
+
+// uncommnet for running single test
+// see: https://stackoverflow.com/a/26699963/740245
+//var ttest = test;
+//test = function() {};

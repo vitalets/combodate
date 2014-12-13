@@ -7,7 +7,7 @@ This plugin converts `<input type="text">` into dropdown elements to pick day, m
 * based on [moment.js](http://momentjs.com)
 
 
-## Demo, Docs and Download
+## Live Demo and Docs
 **http://vitalets.github.com/combodate**
 
 
@@ -18,8 +18,7 @@ bower install combodate
 or [download latest version](http://vitalets.github.com/combodate).
 
 ## jsFiddle
-http://jsfiddle.net/5m6gG/
+http://jsfiddle.net/5m6gG/62/
 
 ## License
-Copyright (c) 2013 Vitaliy Potapov  
-Released under the MIT license.
+MIT
